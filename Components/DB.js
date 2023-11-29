@@ -22,5 +22,5 @@ const firebaseConfig = {
 const firebase_app = initializeApp(firebaseConfig);
 const auth = getAuth(firebase_app);
 const db = getDatabase(firebase_app);
-const storage = getStorage(firebase_app);
+const storage = getStorage(firebase_app, "gs://skin-disease-4711e.appspot.com");
 export { firebase_app, auth, db, storage};

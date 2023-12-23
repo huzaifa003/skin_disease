@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ActivityIndicator } from "react-native";
 import { auth, db, storage, firebase_app } from "../Components/DB";
 import { useNavigation } from "@react-navigation/native";
 import Camera from "./CameraScreen";
 import { Button } from "react-native-elements";
 import { ScrollView } from "react-native";
 import { getStorage, uploadBytes, ref as refStorage } from "firebase/storage";
-import {set, ref, getDatabase } from "firebase/database";
+import { set, ref, getDatabase } from "firebase/database";
+import { useRef } from "react";
 
 export default function BookAppointment() {
     const navigation = useNavigation();
@@ -15,6 +16,9 @@ export default function BookAppointment() {
     const [description, setDescription] = useState("");
     const [image, setImage] = useState(null);
     const [imageRef, setImageRef] = useState(null);
+    const [uploading, setUploading] = useState(false); // Added state for uploading status
+
+    const descriptionRef = useRef(0);
 
     function chooseImage(imgUri) {
         setImage(imgUri);
@@ -24,35 +28,37 @@ export default function BookAppointment() {
     const database = getDatabase(firebase_app);
     const store = getStorage(firebase_app);
     function handleSendData() {
-        console.log(storage)
+        console.log(storage);
         if (user && description && image) {
             const imageStorageRef = refStorage(storage, `images/${user}/${image.uri}`);
 
-            fetch(image.uri).then((response) => {
-                return response.blob();
-            }
-            ).then((blob) => { 
-                console.log(blob);
-                uploadBytes(imageStorageRef, blob)
-                .then((snapshot) => {
-                    console.log("Uploaded a blob or file!");
+            fetch(image.uri)
+                .then((response) => {
+                    return response.blob();
+                })
+                .then((blob) => {
+                    console.log(blob);
+                    setUploading(true); // Set uploading status to true
+                    uploadBytes(imageStorageRef, blob)
+                        .then((snapshot) => {
+                            console.log("Uploaded a blob or file!" + snapshot.ref.fullPath + " " + snapshot.ref.name);
+                            setUploading(false); // Set uploading status to false after successful upload
+                        })
+                        .catch((error) => {
+                            console.error("Error uploading a blob or file!", error);
+                            setUploading(false); // Set uploading status to false after error
+                        });
                 })
                 .catch((error) => {
-                    console.error("Error uploading a blob or file!", error);
+                    console.error("Error getting blob!", error);
+                    setUploading(false); // Set uploading status to false after error
                 });
-            }
-            ).catch((error) => {
-                console.error("Error getting blob!", error);
-            }
-            );
-
-
-        
 
             set(ref(database, `/patients/${user}/`), {
                 user: user,
                 description: description,
                 image: image.uri,
+                status: "pending",
             })
                 .then(() => {
                     console.log("Data sent successfully!");
@@ -72,28 +78,41 @@ export default function BookAppointment() {
                 navigation.navigate("Login");
             }
         });
+        descriptionRef.current.focus();
     }, []);
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Book Appointment</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Description"
-                value={description}
-                onChangeText={setDescription}
-            />
-            {image && <Image source={{ uri: image.uri }} style={styles.image} />}
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate("CameraScreen", { chooseImage })}
-            >
-                <Text style={styles.buttonText}>Upload Image</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={handleSendData}>
-                <Text style={styles.buttonText}>Send Data</Text>
-            </TouchableOpacity>
-        </ScrollView>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <Text style={styles.title}>Book Appointment</Text>
+                <TextInput
+                    ref={descriptionRef}
+                    style={styles.input}
+                    placeholder="Description"
+                    value={description}
+                    onChangeText={setDescription}
+                />
+                {image && <Image source={{ uri: image.uri }} style={styles.image} />}
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate("CameraScreen", { chooseImage })}
+                >
+                    <Text style={styles.buttonText}>Upload Image</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={handleSendData}>
+                    <Text style={styles.buttonText}>Send Data</Text>
+                </TouchableOpacity>
+
+                
+                {uploading && <ActivityIndicator size="large" color="blue" />} 
+
+                <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('ShowAppointments')}}>
+                    <Text style={styles.buttonText}>Show Appointments</Text>
+                </TouchableOpacity>
+
+
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -102,6 +121,10 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         alignItems: "center",
+        justifyContent: "center",
+    },
+    scrollContainer: {
+        flexGrow: 1,
         justifyContent: "center",
     },
     title: {

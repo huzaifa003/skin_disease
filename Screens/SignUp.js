@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth';
 import React, { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import { Text, Input, Button } from 'react-native-elements';
 import { auth } from '../Components/DB';
 import { TouchableOpacity } from 'react-native';
@@ -33,7 +33,7 @@ const SignUp = ({ navigation }) => {
 
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
             {displayError ? <Text style={styles.errorText}>{error}</Text> : null}
             <Input
                 label="Email"
@@ -62,7 +62,7 @@ const SignUp = ({ navigation }) => {
             <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
             <Text style={styles.text}> Already have an account? Sign In</Text>
             </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 

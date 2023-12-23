@@ -12,6 +12,7 @@ import Home from './Screens/Home';
 import PostData from './Screens/PostData';
 import CameraScreen from './Screens/CameraScreen';
 import BookAppointment from './Screens/BookAppointment';
+import ShowAppointments from './Screens/ShowAppointments';
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -31,15 +32,21 @@ export default function App() {
         />
 
         <Stack.Screen
-          name = "BookAppointment"
-          component = {BookAppointment}
-          options = {{title: "Book Appointment Page"}}
+          name="BookAppointment"
+          component={BookAppointment}
+          options={{ title: "Book Appointment Page" }}
         />
 
         <Stack.Screen
           name="CameraScreen"
           component={CameraScreen}
           options={{ title: "Camera Page" }}
+        />
+
+        <Stack.Screen
+          name='ShowAppointments'
+          component={ShowAppointments}
+          options={{ title: 'Show Appointments' }}
         />
 
         <Stack.Screen

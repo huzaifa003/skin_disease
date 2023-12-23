@@ -1,6 +1,6 @@
 import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { Text, Input, Button } from 'react-native-elements';
 import { auth } from '../Components/DB';
 
@@ -29,7 +29,7 @@ const SignIn = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
       {displayError && <Text style={styles.errorText}>{error}</Text>}
       <Input
         label="Email"
@@ -54,7 +54,7 @@ const SignIn = ({ navigation }) => {
         buttonStyle={styles.button}
         titleStyle={styles.buttonTitle}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

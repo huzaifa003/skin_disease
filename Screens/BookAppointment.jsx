@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ActivityIndicator, Platform } from "react-native";
 import { auth, db, storage, firebase_app } from "../Components/DB";
 import { useNavigation } from "@react-navigation/native";
 import Camera from "./CameraScreen";
@@ -30,23 +30,55 @@ export default function BookAppointment() {
     function handleSendData() {
         console.log(storage);
         if (user && description && image) {
-            const imageStorageRef = refStorage(storage, `images/${user}/${image.uri}`);
-
+            let path = Date.now() + Math.random();
+            path = path.toString();
+            path = path.replace(".", "")
+            path = path.replace("#", "")
+            path = path.replace("$", "")
+            path = path.replace("[", "")
+            path = path.replace("]", "")
+            path = path.replace("/", "")
+            
+            
+            path.replace(" ", "")
+            path.replace(" ", "")
+            const imageStorageRef = refStorage(storage, `images/${user}/${path}`);
+            console.log(path)
             fetch(image.uri)
                 .then((response) => {
                     return response.blob();
                 })
                 .then((blob) => {
-                    console.log(blob);
                     setUploading(true); // Set uploading status to true
+                    console.log(blob);
+                    // setUploading(true); // Set uploading status to true
                     uploadBytes(imageStorageRef, blob)
                         .then((snapshot) => {
+                            set(ref(database, `/patients/${user}/${path}`), {
+                                user: user,
+                                description: description,
+                                image: image.uri,
+                                status: "pending",
+                                path: path,
+                            })
+                                .then(() => {
+                                    console.log("Data sent successfully!");
+                                    setDescription("");
+                                    setImage(null);
+                                    setImageRef(null);
+                                    setUploading(false); // Set uploading status to false after successful upload
+
+                                })
+                                .catch((error) => {
+                                    console.error("Error sending data: ", error);
+                                });
+
                             console.log("Uploaded a blob or file!" + snapshot.ref.fullPath + " " + snapshot.ref.name);
-                            setUploading(false); // Set uploading status to false after successful upload
+                            // setUploading(false); // Set uploading status to false after successful upload
                         })
                         .catch((error) => {
                             console.error("Error uploading a blob or file!", error);
-                            setUploading(false); // Set uploading status to false after error
+                            // setUploading(false); // Set uploading status to false after error
                         });
                 })
                 .catch((error) => {
@@ -54,18 +86,7 @@ export default function BookAppointment() {
                     setUploading(false); // Set uploading status to false after error
                 });
 
-            set(ref(database, `/patients/${user}/`), {
-                user: user,
-                description: description,
-                image: image.uri,
-                status: "pending",
-            })
-                .then(() => {
-                    console.log("Data sent successfully!");
-                })
-                .catch((error) => {
-                    console.error("Error sending data: ", error);
-                });
+            
         }
     }
 
@@ -82,7 +103,7 @@ export default function BookAppointment() {
     }, []);
 
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Text style={styles.title}>Book Appointment</Text>
                 <TextInput

@@ -1,57 +1,101 @@
-import {  onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
-import React, { useEffect } from 'react';
-import {View} from 'react-native'
+import { onAuthStateChanged, signInWithEmailAndPassword } from '@firebase/auth';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Text, Input, Button } from 'react-native-elements';
-import {auth} from '../Components/DB';
+import { auth } from '../Components/DB';
 
+const SignIn = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [displayError, setDisplayError] = useState(false);
 
-const SignIn = ({navigation}) => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.reset({ index: 0, routes: [{ name: 'BookAppointment' }] });
+      }
+    });
+  }, []);
 
-  const [error, setError] = React.useState('');
-  const [displayError, setDisplayError] = React.useState(false)
-
-  useEffect(()=>{
-    auth.onAuthStateChanged((user)=>{
-        if (user){
-            navigation.reset({index: 0, routes : [{name: "BookAppointment"}]})
-            // console.log(user);
-        }
-    })
-  },[])
   const handleSignIn = async () => {
     try {
-      await signInWithEmailAndPassword(auth,email, password);
-
+      await signInWithEmailAndPassword(auth, email, password);
       navigation.navigate('BookAppointment');
     } catch (error) {
       setError('Sign In failed: ' + error.message);
-      setDisplayError(true)
+      setDisplayError(true);
     }
   };
 
-
   return (
-    <View style={{}}>
-      
-      { displayError? <Text style={{ backgroundColor: 'red'}}> {error} </Text> : "" }
+    <View style={styles.container}>
+      {displayError && <Text style={styles.errorText}>{error}</Text>}
       <Input
         label="Email"
         value={email}
-        onChangeText={(text) => setEmail(text)}
+        onChangeText={setEmail}
+        containerStyle={styles.inputContainer}
+        inputStyle={styles.input}
+        labelStyle={styles.label}
       />
-
       <Input
         label="Password"
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={setPassword}
+        containerStyle={styles.inputContainer}
+        inputStyle={styles.input}
+        labelStyle={styles.label}
+        secureTextEntry
       />
-
-      <Button title="Sign In" onPress={handleSignIn} />
-
+      <Button
+        title="Sign In"
+        onPress={handleSignIn}
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonTitle}
+      />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  input: {
+    fontSize: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+  },
+  label: {
+    fontSize: 14,
+    marginBottom: 6,
+    color: '#333',
+  },
+  errorText: {
+    backgroundColor: 'red',
+    padding: 10,
+    marginBottom: 20,
+    color: '#fff',
+  },
+  button: {
+    width: '100%',
+    backgroundColor: '#007bff',
+    borderRadius: 4,
+  },
+  buttonTitle: {
+    fontSize: 16,
+  },
+});
 
 export default SignIn;

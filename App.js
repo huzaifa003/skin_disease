@@ -14,11 +14,29 @@ import CameraScreen from './Screens/CameraScreen';
 import BookAppointment from './Screens/BookAppointment';
 import ShowAppointments from './Screens/ShowAppointments';
 
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import ShowDetails from './Screens/ShowDetails';
+
 export default function App() {
+
+  const Tab = createMaterialBottomTabNavigator();
   const Stack = createNativeStackNavigator();
-  return (
-    <NavigationContainer>
+
+  const TabNavigator = () => {
+    return (
+      <Tab.Navigator>
+        {/* <Tab.Screen name="Home" component={Home} /> */}
+
+        <Tab.Screen name="ShowAppointments" component={ShowAppointments} />
+      </Tab.Navigator>
+    )
+  }
+
+  const stackNavigator = () => {
+    return (
       <Stack.Navigator>
+
         <Stack.Screen
           name="SignUp"
           component={SignUp}
@@ -32,6 +50,13 @@ export default function App() {
         />
 
         <Stack.Screen
+          name='ShowAppointments'
+          component={ShowAppointments}
+          options={{ title: 'Show Appointments' }}
+        />
+
+
+        <Stack.Screen
           name="BookAppointment"
           component={BookAppointment}
           options={{ title: "Book Appointment Page" }}
@@ -43,10 +68,11 @@ export default function App() {
           options={{ title: "Camera Page" }}
         />
 
-        <Stack.Screen
-          name='ShowAppointments'
-          component={ShowAppointments}
-          options={{ title: 'Show Appointments' }}
+
+        <Stack.Screen 
+          name='ShowDetails'
+          component={ShowDetails}
+          options={{title: 'Show Details'}}
         />
 
         <Stack.Screen
@@ -61,7 +87,16 @@ export default function App() {
           options={{ title: "Add Data" }}
         />
 
+
+
+
       </Stack.Navigator>
+    )
+  }
+
+  return (
+    <NavigationContainer>
+      {stackNavigator()}
     </NavigationContainer>
   );
 }

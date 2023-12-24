@@ -8,6 +8,7 @@ import { Button } from "react-native-elements";
 import { onAuthStateChanged } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 
 const ShowAppointments = () => {
     const navigation = useNavigation();
@@ -76,7 +77,7 @@ const ShowAppointments = () => {
                 console.log("User is signed in");
                 console.log(user.uid);
                 setUser(user.uid);
-                
+
                 // storeData();
             } else {
                 console.log("User is signed out")
@@ -84,7 +85,7 @@ const ShowAppointments = () => {
             }
         });
 
-        
+
 
         getAppointments();
         imageURL();
@@ -92,7 +93,7 @@ const ShowAppointments = () => {
 
         return () => {
             console.log("CLEANUP");
-         
+
         }
 
     }, []);
@@ -122,22 +123,24 @@ const ShowAppointments = () => {
             >
                 {showRef.current == 1 ? (
                     keys.map((key, index) => {
-                        
+
                         return (
-                            <View key={index} style={styles.appointmentContainer}>
-                                {/* <Image
+                            <TouchableOpacity key={index} style={styles.appointmentContainer} onPress={() => navigation.navigate("ShowDetails", { uri: `images/${user}/${key}`,description : appointments[key].description, status : appointments[key].status })}>
+                                <View key={index} style={styles.appointmentContainer}>
+                                    {/* <Image images/${user}/${keys[i]
                                     source={{ uri: url }}
                                     style={styles.image}
                                 /> */}
-                                <Text style={styles.description}>
-                                    {appointments[key].description}
-                                </Text>
+                                    <Text style={styles.description}>
+                                        {appointments[key].description}
+                                    </Text>
 
-                                <Text style={styles.status}>
-                                    {appointments[key].status}
-                                </Text>
+                                    <Text style={styles.status}>
+                                        {appointments[key].status}
+                                    </Text>
 
-                            </View>
+                                </View>
+                            </TouchableOpacity>
                         );
                     })
                 ) : (
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: 24,
         fontWeight: "bold",
-        
+
     },
     appointmentContainer: {
         marginBottom: 20,

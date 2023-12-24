@@ -13,7 +13,7 @@ const SignIn = ({ navigation }) => {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.reset({ index: 0, routes: [{ name: 'BookAppointment' }] });
+        navigation.reset({ index: 0, routes: [{ name: 'ShowAppointments' }] });
       }
     });
   }, []);
@@ -21,7 +21,7 @@ const SignIn = ({ navigation }) => {
   const handleSignIn = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate('ShowAppointments');
+      navigation.reset({ index: 0, routes: [{ name: 'ShowAppointments' }] });
     } catch (error) {
       setError('Sign In failed: ' + error.message);
       setDisplayError(true);

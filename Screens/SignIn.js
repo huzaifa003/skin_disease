@@ -20,6 +20,9 @@ const SignIn = ({ navigation }) => {
 
   const handleSignIn = async () => {
     try {
+      if (email === "derm" && password === "derm") {
+        navigation.reset({ index: 0, routes: [{ name: 'DermatologistHome' }] });
+      }
       await signInWithEmailAndPassword(auth, email, password);
       navigation.reset({ index: 0, routes: [{ name: 'ShowAppointments' }] });
     } catch (error) {

@@ -5,7 +5,7 @@ import { getStorage, ref as storageRef, getDownloadURL } from "firebase/storage"
 import { firebase_app, db, auth } from "../Components/DB";
 import { useNavigation } from "@react-navigation/native";
 import { Button } from "react-native-elements";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
@@ -105,6 +105,20 @@ const ShowAppointments = () => {
         setRefreshing(false);
     };
 
+    const handleLogout = () => {
+        signOut(auth)
+            .then(() => {
+                console.log("User signed out successfully");
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "SignUp" }],
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -121,6 +135,13 @@ const ShowAppointments = () => {
                     color="black"
                     onPress={() => navigation.navigate("MapScreen")}
                 />
+                <Ionicons
+                    name="chatbubble-ellipses-outline"
+                    size={24}
+                    color="black"
+                    onPress={() => navigation.navigate("Chat")}
+                />
+                <Button title="Logout" onPress={handleLogout} />
             </View>
             <ScrollView
                 refreshControl={

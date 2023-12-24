@@ -18,6 +18,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShowDetails from './Screens/ShowDetails';
 import MapScreen from './Screens/MapScreen';
+import DermatologistHome from './Screens/DermatologistHome';
 
 export default function App() {
 
@@ -80,6 +81,12 @@ export default function App() {
           name='MapScreen'
           component={MapScreen}
           options={{title: 'Map Screen'}}
+        />
+
+        <Stack.Screen
+          name = "DermatologistHome"
+          component = {DermatologistHome}
+          options = {{title: 'Dermatologist Home'}}
         />
 
         <Stack.Screen

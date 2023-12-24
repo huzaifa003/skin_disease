@@ -81,7 +81,7 @@ export default DermatologistHome = () => {
                                 <View style={styles.appointmentContainer}>
                                     {data[user] &&
                                         Object.keys(data[user]).map((appointment, index) => (
-                                            <TouchableOpacity key={appointment}>
+                                            <TouchableOpacity key={appointment} onPress={()=>navigation.navigate("GiveFeedback",{description: data[user][appointment].description, uri : `images/${user}/${appointment}`, status: ''})}>
                                                 <View style={styles.appointmentCard}>
                                                     <Text style={styles.appointmentTitle}>{appointment}</Text>
                                                     <Text style={styles.appointmentLabel}>Description:</Text>

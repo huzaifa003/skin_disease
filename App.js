@@ -19,6 +19,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import ShowDetails from './Screens/ShowDetails';
 import MapScreen from './Screens/MapScreen';
 import DermatologistHome from './Screens/DermatologistHome';
+import GiveFeedback from './Screens/GiveFeedback';
 
 export default function App() {
 
@@ -83,6 +84,11 @@ export default function App() {
           options={{title: 'Map Screen'}}
         />
 
+        <Stack.Screen
+          name='GiveFeedback'
+          component={GiveFeedback}
+          options={{title: 'Give Feedback'}}  
+        />
         <Stack.Screen
           name = "DermatologistHome"
           component = {DermatologistHome}

@@ -57,6 +57,8 @@ export default DermatologistHome = () => {
             .catch((error) => {
                 console.log(error);
             });
+
+            onRefresh();
     }, []);
 
     return (
@@ -70,7 +72,7 @@ export default DermatologistHome = () => {
                 {users &&
                     users.map((user) => (
                         <View key={user} style={styles.card}>
-                            <Text style={styles.cardTitle}>{user}</Text>
+                            <Text style={styles.cardTitle}> Patient ID: {user}</Text>
 
                             <Button
                                 title={selectedUser === user ? "Hide Reports" : "Show Reports"}
@@ -81,9 +83,9 @@ export default DermatologistHome = () => {
                                 <View style={styles.appointmentContainer}>
                                     {data[user] &&
                                         Object.keys(data[user]).map((appointment, index) => (
-                                            <TouchableOpacity key={appointment} onPress={()=>navigation.navigate("GiveFeedback",{description: data[user][appointment].description, uri : `images/${user}/${appointment}`, status: ''})}>
+                                            <TouchableOpacity key={appointment} onPress={()=>navigation.navigate("GiveFeedback",{description: data[user][appointment].description, uri : `images/${user}/${appointment}`, status: data[user][appointment].status, user: user, report: appointment})}>
                                                 <View style={styles.appointmentCard}>
-                                                    <Text style={styles.appointmentTitle}>{appointment}</Text>
+                                                    <Text style={styles.appointmentTitle}>Report ID: {appointment}</Text>
                                                     <Text style={styles.appointmentLabel}>Description:</Text>
                                                     <Text style={styles.appointmentDescription}>
                                                         {data[user][appointment].description}

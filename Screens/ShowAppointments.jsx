@@ -89,10 +89,11 @@ const ShowAppointments = () => {
 
         getAppointments();
         imageURL();
-        setRefreshing(false);;
+        setRefreshing(false);
 
         return () => {
             console.log("CLEANUP");
+            onRefresh();
 
         }
 

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { getStorage, ref as storageRef, getDownloadURL } from "firebase/storage";
-import { firebase_app } from "../Components/DB";
+import { firebase_app, db } from "../Components/DB";
+import { update, ref} from "firebase/database";
 
 export default function GiveFeedback({ route, navigation }) {
-    const { uri, description, status } = route.params;
+    const { uri, description, status, user, report } = route.params;
+    console.log(route.params)
     const storage = getStorage(firebase_app);
     const imageRef = storageRef(storage, uri);
     const [image, setImage] = useState(null);
@@ -26,8 +28,20 @@ export default function GiveFeedback({ route, navigation }) {
 
     const handleSave = () => {
         // Save the edited status and description
-        console.log("Status:", editedStatus);
-        console.log("Description:", editedDescription);
+        const reportRef = ref(db, `patients/${user}/${report}`);
+        update(reportRef, {
+            status: editedStatus,
+            description: editedDescription,
+        })
+            .then(() => {
+                console.log("Successfully updated");
+                navigation.goBack();
+            })
+            .catch((error) => {
+                console.log(error);
+            }
+            );
+
     };
 
     const dismissKeyboard = () => {

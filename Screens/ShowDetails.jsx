@@ -28,11 +28,21 @@ export default function ShowDetails({ route, navigation }) {
             });
     }, []);
 
+    const getStatusColor = () => {
+        if (status === "pending") {
+            return "#ff6f00"; // orange
+        } else {
+            return "#00cc00"; // green
+        }
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>ShowDetails</Text>
             <View style={styles.detailsContainer}>
-                <Text style={styles.status}>{status}</Text>
+                <Text style={[styles.status, { color: getStatusColor() }]}>
+                    {status}
+                </Text>
                 <Text style={styles.description}>{description}</Text>
             </View>
             {loading ? (
@@ -66,7 +76,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         marginBottom: 8,
-        color: "#ff6f00",
     },
     description: {
         fontSize: 16,

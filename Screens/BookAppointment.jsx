@@ -127,9 +127,9 @@ export default function BookAppointment() {
                 
                 {uploading && <ActivityIndicator size="large" color="blue" />} 
 
-                <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('ShowAppointments')}}>
+                {/* <TouchableOpacity style={styles.button} onPress={()=>{navigation.reset({"index": 0, routes : [{"name": "ShowAppointments"}]})}}>
                     <Text style={styles.buttonText}>Show Appointments</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
 
             </ScrollView>

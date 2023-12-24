@@ -21,7 +21,7 @@ const SignIn = ({ navigation }) => {
   const handleSignIn = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate('BookAppointment');
+      navigation.navigate('ShowAppointments');
     } catch (error) {
       setError('Sign In failed: ' + error.message);
       setDisplayError(true);

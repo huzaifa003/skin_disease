@@ -136,12 +136,12 @@ const ShowAppointments = () => {
                     color="black"
                     onPress={() => navigation.navigate("MapScreen")}
                 />
-                <Ionicons
+                {/* <Ionicons
                     name="chatbubble-ellipses-outline"
                     size={24}
                     color="black"
                     onPress={() => navigation.navigate("Chat")}
-                />
+                /> */}
                 <Button title="Logout" onPress={handleLogout} />
             </View>
             <ScrollView
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#fff",
+        backgroundColor: "#F9F9F9", // Change the background color to a vibrant color
     },
     header: {
         flexDirection: "row",
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: 24,
         fontWeight: "bold",
-
+        color: "blue", // Add a nice color here
     },
     appointmentContainer: {
         marginBottom: 20,
@@ -202,6 +202,7 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         borderRadius: 5,
         padding: 10,
+        backgroundColor: "#FFFFFF", // Change the background color to a vibrant color
     },
     image: {
         width: "100%",

@@ -115,6 +115,12 @@ const ShowAppointments = () => {
                     color="black"
                     onPress={() => navigation.navigate("BookAppointment")}
                 />
+                <Ionicons
+                    name="map"
+                    size={24}
+                    color="black"
+                    onPress={() => navigation.navigate("MapScreen")}
+                />
             </View>
             <ScrollView
                 refreshControl={

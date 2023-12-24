@@ -17,6 +17,7 @@ import ShowAppointments from './Screens/ShowAppointments';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShowDetails from './Screens/ShowDetails';
+import MapScreen from './Screens/MapScreen';
 
 export default function App() {
 
@@ -73,6 +74,12 @@ export default function App() {
           name='ShowDetails'
           component={ShowDetails}
           options={{title: 'Show Details'}}
+        />
+
+        <Stack.Screen
+          name='MapScreen'
+          component={MapScreen}
+          options={{title: 'Map Screen'}}
         />
 
         <Stack.Screen

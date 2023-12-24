@@ -9,10 +9,14 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+import { Context } from '../Global/Context';
+import { useContext } from 'react';
+import { Switch } from 'react-native';
 
 const ShowAppointments = () => {
     const navigation = useNavigation();
-
+    const { background, setBackground } = useContext(Context);
+    const [isDarkMode, setIsDarkMode] = React.useState(false);
     const [ShowAppointments, setShowAppointments] = useState([]);
     const [shownImage, setShownImage] = useState(null);
     const [appointments, setAppointments] = useState([]);
@@ -22,6 +26,68 @@ const ShowAppointments = () => {
     const [imageURLs, setImageUrls] = useState({});
     const storage = getStorage(firebase_app);
     const [refreshing, setRefreshing] = useState(false);
+
+
+    const toggleTheme = () => {
+        setIsDarkMode(!isDarkMode);
+        setBackground(isDarkMode ? 'lightgrey' : 'lightblue');
+        console.log(background);
+    };
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            padding: 20,
+            backgroundColor: background, // Change the background color to a vibrant color
+        },
+        header: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 20,
+        },
+        heading: {
+            fontSize: 24,
+            fontWeight: "bold",
+            color: "blue", // Add a nice color here
+        },
+        appointmentContainer: {
+            marginBottom: 20,
+            borderWidth: 1,
+            borderColor: "#ccc",
+            borderRadius: 5,
+            padding: 10,
+            backgroundColor: "#FFFFFF", // Change the background color to a vibrant color
+        },
+        image: {
+            width: "100%",
+            height: 200,
+            resizeMode: "cover",
+            marginBottom: 10,
+        },
+        description: {
+            fontSize: 16,
+        },
+        status: {
+            fontSize: 16,
+            fontWeight: "bold",
+        },
+        loadingText: {
+            fontSize: 16,
+            textAlign: "center",
+            marginTop: 20,
+        },
+        toggleContainer: {
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: 10,
+        },
+        toggleLabel: {
+            marginLeft: 10,
+            fontSize: 16,
+        },
+    });
+
 
 
     const getAppointments = () => {
@@ -144,6 +210,10 @@ const ShowAppointments = () => {
                 /> */}
                 <Button title="Logout" onPress={handleLogout} />
             </View>
+            <View style={styles.toggleContainer}>
+                <Switch value={isDarkMode} onValueChange={toggleTheme} />
+                <Text style={styles.toggleLabel}>Toggle Theme</Text>
+            </View>
             <ScrollView
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -153,7 +223,7 @@ const ShowAppointments = () => {
                     keys.map((key, index) => {
 
                         return (
-                            <TouchableOpacity key={index} style={styles.appointmentContainer} onPress={() => navigation.navigate("ShowDetails", { uri: `images/${user}/${key}`,description : appointments[key].description, status : appointments[key].status })}>
+                            <TouchableOpacity key={index} style={styles.appointmentContainer} onPress={() => navigation.navigate("ShowDetails", { uri: `images/${user}/${key}`, description: appointments[key].description, status: appointments[key].status })}>
                                 <View key={index} style={styles.appointmentContainer}>
                                     {/* <Image images/${user}/${keys[i]
                                     source={{ uri: url }}
@@ -179,49 +249,6 @@ const ShowAppointments = () => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: "#F9F9F9", // Change the background color to a vibrant color
-    },
-    header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 20,
-    },
-    heading: {
-        fontSize: 24,
-        fontWeight: "bold",
-        color: "blue", // Add a nice color here
-    },
-    appointmentContainer: {
-        marginBottom: 20,
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 5,
-        padding: 10,
-        backgroundColor: "#FFFFFF", // Change the background color to a vibrant color
-    },
-    image: {
-        width: "100%",
-        height: 200,
-        resizeMode: "cover",
-        marginBottom: 10,
-    },
-    description: {
-        fontSize: 16,
-    },
-    status: {
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    loadingText: {
-        fontSize: 16,
-        textAlign: "center",
-        marginTop: 20,
-    },
-});
+
 
 export default ShowAppointments;

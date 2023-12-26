@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, Image, StyleSheet, ScrollView, RefreshControl } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView, RefreshControl, SafeAreaView } from "react-native";
 import { getDatabase, ref, onValue, set, get } from "firebase/database";
 import { getStorage, ref as storageRef, getDownloadURL } from "firebase/storage";
 import { firebase_app, db, auth } from "../Components/DB";
@@ -38,6 +38,7 @@ const ShowAppointments = () => {
         container: {
             flex: 1,
             padding: 20,
+            paddingHorizontal: 30, // Add padding to the sides
             backgroundColor: background, // Change the background color to a vibrant color
         },
         header: {
@@ -143,7 +144,8 @@ const ShowAppointments = () => {
                 console.log("User is signed in");
                 console.log(user.uid);
                 setUser(user.uid);
-
+                getAppointments();
+                imageURL();
                 // storeData();
             } else {
                 console.log("User is signed out")
@@ -187,7 +189,7 @@ const ShowAppointments = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container} >
             <View style={styles.header}>
                 <Text style={styles.heading}>Appointments</Text>
                 <Ionicons
@@ -219,7 +221,8 @@ const ShowAppointments = () => {
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }
             >
-                {showRef.current == 1 ? (
+                {console.log(keys)}
+                {1 == 1 ? (
                     keys.map((key, index) => {
 
                         return (
@@ -245,10 +248,8 @@ const ShowAppointments = () => {
                     <Text style={styles.loadingText}>Loading</Text>
                 )}
             </ScrollView>
-        </View>
+        </SafeAreaView>
     );
 };
-
-
 
 export default ShowAppointments;

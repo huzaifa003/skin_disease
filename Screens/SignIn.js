@@ -78,7 +78,7 @@ const SignIn = ({ navigation }) => {
         navigation.reset({ index: 0, routes: [{ name: 'DermatologistHome' }] });
       }
       await signInWithEmailAndPassword(auth, email, password);
-      navigation.reset({ index: 0, routes: [{ name: 'ShowAppointments' }] });
+      navigation.reset({ index: 0, routes: [{ name: 'TabNavigator' }] });
     } catch (error) {
       setError('Sign In failed: ' + error.message);
       setDisplayError(true);
